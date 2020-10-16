@@ -4,23 +4,23 @@
     home_page:                      gemini://sawv.org
     domain_name:                    sawv.org
     app_name:                       Sora 1.0
-    template_home:                  /home/john/Kranz/KranzServer/KranzSora/tmpl
-    default_doc_root:               /home/john/Kranz/KranzServer/docroot
+    template_home:                  /home/KranzServer/KranzSora/tmpl
+    default_doc_root:               /home/KranzServer/docroot
     debug_mode:                     false
 # these variables are required by the API code, which might also use some of the above vars
     author_name:                    sawv 
-    author_email:                   jothut@fastmail.fm
-    author_email_2:                 sawv@riseup.net
-    session_id_storage:             /home/john/Kranz/KranzServer/sessionids
-    searches_storage:               /home/john/Kranz/KranzServer/searches
+    author_email:                   myemailaddress
+    author_email_2:                 myemailaddress2
+    session_id_storage:             /home/KranzServer/sessionids
+    searches_storage:               /home/KranzServer/searches
     mailgun_api_key:                mailgun-api-key
     mailgun_domain:                 author-mailgun-domain-name
     mailgun_from:                   author-mailgun-from-line
-    markup_storage:                 /home/john/Kranz/KranzServer/markup
+    markup_storage:                 /home/KranzServer/markup
     links_json_file:                links.json
-    links_json_file_storage:        /home/john/Kranz/KranzServer/filelist
+    links_json_file_storage:        /home/KranzServer/filelist
     rss3_feed_file:                 rss3.txt
     atom_feed_file:                 atom.xml
     hfeed_file:                     index.html
     max_entries:                    20
-    versions_storage:               /home/john/Kranz/KranzServer/versions
+    versions_storage:               /home/KranzServer/versions
