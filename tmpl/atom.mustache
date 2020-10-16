@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>{{{id}}}</id>
+  <title>{{{title}}}</title>
+  <updated>{{{updated}}}</updated>
+  <link href="{{{linkself}}}" rel="self"/>
+  <link href="{{{linkalternate}}}" rel="alternate"/>
+  <author>
+    <name>jr at sawv.org</name>
+  </author>
+{{#entries_loop}}
+  <entry>
+    <id>{{{id}}}</id>
+    <title>{{{title}}}</title>
+    <updated>{{{updated}}}</updated>
+    <link href="{{{link}}}" rel="alternate"/>
+  </entry>
+{{/entries_loop}}
+</feed>

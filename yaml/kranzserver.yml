@@ -1,0 +1,26 @@
+# these variables are required by the Client code
+    site_name:                      Sawv's E/N Gemsite
+    site_description:               Ramblings about Everything and Nothing 
+    home_page:                      gemini://sawv.org
+    domain_name:                    sawv.org
+    app_name:                       Sora 1.0
+    template_home:                  /home/john/Kranz/KranzServer/KranzSora/tmpl
+    default_doc_root:               /home/john/Kranz/KranzServer/docroot
+    debug_mode:                     false
+# these variables are required by the API code, which might also use some of the above vars
+    author_name:                    sawv 
+    author_email:                   jothut@fastmail.fm
+    author_email_2:                 sawv@riseup.net
+    session_id_storage:             /home/john/Kranz/KranzServer/sessionids
+    searches_storage:               /home/john/Kranz/KranzServer/searches
+    mailgun_api_key:                mailgun-api-key
+    mailgun_domain:                 author-mailgun-domain-name
+    mailgun_from:                   author-mailgun-from-line
+    markup_storage:                 /home/john/Kranz/KranzServer/markup
+    links_json_file:                links.json
+    links_json_file_storage:        /home/john/Kranz/KranzServer/filelist
+    rss3_feed_file:                 rss3.txt
+    atom_feed_file:                 atom.xml
+    hfeed_file:                     index.html
+    max_entries:                    20
+    versions_storage:               /home/john/Kranz/KranzServer/versions

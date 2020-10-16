@@ -1,0 +1,85 @@
+
+
+local M = {}
+
+local rex     = require "rex_pcre"
+
+local session = require "session"
+local config  = require "config"
+local utils   = require "utils"
+local rj      = require "returnjson"
+
+
+function M.searches(hash)
+
+    local search_text = hash.search_string
+    local author_name = hash.author
+    local session_id  = hash.session_id
+    local rev         = hash.rev
+
+    if session.is_valid_login(author_name, session_id, rev) == false then 
+        return rj.report_error("400", "Unable to peform action.", "You are not logged in.")
+    else
+        local posts = {}
+
+        local total_hits = 0
+
+        -- i think that this is unnecessary
+        -- search_text = urlcode.unescape(search_text)
+
+        -- remove unnacceptable chars from the search string
+        search_text = rex.gsub(search_text, "[^A-Za-z0-9 _'%-%#%.]", "", nil, "sx")
+
+        local default_doc_root = config.get_value_for("default_doc_root")
+
+        local search_results_filename = config.get_value_for("searches_storage") .. "/" .. os.time() .. ".txt"
+
+        local grep_cmd = "grep -i -R --exclude-dir=versions --include='*.gmi' -m 1 '" .. search_text .. "' " .. default_doc_root .. " > " .. search_results_filename
+
+        local r = os.execute(grep_cmd)
+
+        if r == true then
+            local f = io.open(search_results_filename, "r")
+
+            if f == nil then
+                return rj.report_error("400", "Could not open search results file for read.", "")
+            else
+                local home_page = config.get_value_for("home_page")
+                for line in f:lines() do
+                    local tmp_array = utils.split(line, ".gmi:")
+                    local tmp_str = rex.gsub(tmp_array[1], default_doc_root .. "/" , "")
+                    local tmp_hash = {
+                        uri = tmp_str,
+                        url = home_page .. "/" .. tmp_str .. ".gmi"
+                    }
+                    table.insert(posts, tmp_hash)
+                    total_hits = total_hits + 1
+                end
+                f:close()
+                local hash = {
+                    total_hits = total_hits,
+                    search_text = search_text,
+                    posts = posts
+                }
+                
+                return rj.success(hash) 
+            end
+        else
+            -- if no search results are found, then program ends up here because Nix system returns non-zero.
+            -- let client side deal with no results found.
+            local hash = {
+                total_hits = 0,
+                search_text = search_text,
+                posts = {}
+            }
+       
+            return rj.success(hash)
+--            rj.report_error("400", "Unable to execute search.", grep_cmd)
+        end
+
+    end
+end
+
+
+return M
+
