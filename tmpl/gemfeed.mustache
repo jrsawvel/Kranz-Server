@@ -1,60 +1,15 @@
-{{> header}}
+# {{{title}}} 
 
-<h1>{{{site_name}}}</h1>
+## {{{description}}}
 
-<p><em>{{{site_description}}}</em></p> 
+=> gemini://sawv.org/posts.gmi  Posts
+=> gemini://sawv.org/feed.gmi   Feed
+language: en-us
+creator: jr@sawv.org
+last-modified: {{{lastmodified}}}
 
-<p>This page is an exception. It's the only HTML page that gets created. All other internal links point to plain text Markdown files. This HTML page is a simple starting point. It lists posts by order of creation date, youngest to oldest.
-</p>
+{{#items_loop}}
+=> {{{link}}}    {{{title}}}
+date: {{{created}}}
 
-
-<ul>
-{{#article_loop}}
-
-<li class="h-entry">
-  <a class="u-url" href="{{{hfeedurl}}}"><span class="p-name">{{{title}}}</span></a>
-   - <small><time class="dt-published" datetime="{{{created}}}">{{{created}}}</time></small>
-  <span style="display:none;"><a class="p-author h-card" href="/about.html">{{{author}}}</a></span>
-</li>
-
-{{/article_loop}}
-</ul>
-
-<p>
-Why do this? For giggles. For testing. For a more simplified and lightweight web reading experience.
-</p>
-
-<p>
-I wrote my thoughts about this in a post, titled <a href="http://sawv.org/2019/01/22/markdownonly-web-browser.html">Markdown-only Web Browser</a>.
-</p>
-
-<p>
-Since I don't have a Markdown-only web browser, I rely on Chrome and Firefox extensions. 
- I use "Markdown Preview Plus" for Chrome and "Markdown Viewer Webext" for Firefox. Both
- extensions offer default themes to display the HTML, and both permit me to upload my own
- custom CSS. Readers should be able to control the typography. 
-</p>
-
-<p>
-I like the Chrome extension
- better because it permits me to select the file extensions to use where the Firefox extension
- only works with .md files. Daring Fireball uses .text files to store the Markdown markup for each 
- post. At sawv.org, I store the Markdown markup in .txt files, although I wish that I had used .md.
- At this test site, I use .md. 
-</p>
-
-<p>
-With the Chrome extension, I can select .md, .txt, and .text files 
- to be converted, if I desire, and provided the files are Markdown files. Markdown content accessed  
- at md.soupmode.com, sawv.org, and daringfireball.net would all display the same, based upon my custom CSS
- that I uploaded to the extension.
-</p>
-
-<p>
-I enjoy viewing the unique, fun, and quirky looks of personal websites, but I visit websites, mainly for
- the content. That means the content is the interface and most of the design is governed by typography. 
- Web publishers won't appease all readers, regarding typography. That's why readers should have full 
- control over how content is displayed on their devices.
-</p>
-
-{{> footer}}
+{{/items_loop}}

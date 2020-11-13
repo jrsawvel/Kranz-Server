@@ -3,8 +3,8 @@
     site_description:               Ramblings about Everything and Nothing 
     home_page:                      gemini://sawv.org
     domain_name:                    sawv.org
-    app_name:                       Sora 1.0
-    template_home:                  /home/KranzServer/KranzSora/tmpl
+    app_name:                       KranzServer 1.0
+    template_home:                  /home/KranzServer/tmpl
     default_doc_root:               /home/KranzServer/docroot
     debug_mode:                     false
 # these variables are required by the API code, which might also use some of the above vars
@@ -19,8 +19,8 @@
     markup_storage:                 /home/KranzServer/markup
     links_json_file:                links.json
     links_json_file_storage:        /home/KranzServer/filelist
+    gemfeed_feed_file:              feed.gmi
     rss3_feed_file:                 rss3.txt
     atom_feed_file:                 atom.xml
-    hfeed_file:                     index.html
     max_entries:                    20
     versions_storage:               /home/KranzServer/versions

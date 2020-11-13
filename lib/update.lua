@@ -50,6 +50,7 @@ function M.update_post(hash)
                    post_hash.word_count     = post_stats.word_count 
                    post_hash.author         = config.get_value_for("author_name")
                    post_hash.original_slug  = original_slug -- diff from create
+                   post_hash.action         = "update"
 
                    local tmp_diff_slug = rex.match(markup, "^<!--[ ]*slug[ ]*:[ ]*(.+)[ ]*-->", 1, "im")
                    if tmp_diff_slug ~= nil then
@@ -60,7 +61,6 @@ function M.update_post(hash)
                        return rj.report_error("400", "Invalid slug.", "New slug in update does not match original.")
                    end
 
-print("DEBUG")
                    local tmp_dir = rex.match(markup, "^<!--[ ]*dir[ ]*:[ ]*(.+)[ ]*-->", 1, "im")
                    if tmp_dir ~= nil then
                        post_hash.dir = utils.trim_spaces(tmp_dir)
@@ -90,8 +90,6 @@ print("DEBUG")
                           return returned_json_text
                       end
                   end
---                   rj.report_error("400", t.title .. "<br>" .. t.slug .. "<br><br>" .. t.after_title_markup, t.post_type .. "<br><br>" .. page_data.custom_css .. "<br><br><h3>markup</h3>" .. page_data.markup)
--- rj.report_error("400", "HTML=", html)
                end
            end
         end 

@@ -39,23 +39,6 @@ end
 
 
 
-function _save_to_file(json_content)
-    local content_table = cjson.decode(json_content)
-
-    if string.len(content_table.markup) > 0 then
-        local filename = "/home/john/Kranz/KranzServer/" .. os.time() .. ".gemtext"
-        local f = io.open(filename, "w")
-        if f == nil then
-            error("unable to open file " .. " for write.")
-        else
-            f:write(content_table.markup)
-            f:close()
-        end
-    end
-end
-
-
-
 -- create a TCP socket and bind it to the local host, at any port
 -- local server = assert(socket.bind("127.0.0.1", 0))
 -- another option:

@@ -47,6 +47,7 @@ function M.create_post(hash)
                    post_hash.reading_time   = post_stats.reading_time
                    post_hash.word_count     = post_stats.word_count 
                    post_hash.author         = config.get_value_for("author_name")
+                   post_hash.action         = "create"
 
                    local tmp_diff_slug = rex.match(markup, "^<!--[ ]*slug[ ]*:[ ]*(.+)[ ]*-->", 1, "im")
                    if tmp_diff_slug ~= nil then
@@ -82,8 +83,6 @@ function M.create_post(hash)
                           return returned_json_text
                       end
                   end
---                   rj.report_error("400", t.title .. "<br>" .. t.slug .. "<br><br>" .. t.after_title_markup, t.post_type .. "<br><br>" .. page_data.custom_css .. "<br><br><h3>markup</h3>" .. page_data.markup)
--- rj.report_error("400", "HTML=", html)
                end
            end
         end 

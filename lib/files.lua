@@ -191,6 +191,58 @@ function _create_rss3_file(hash, stream)
 end
 
 
+function _create_gemfeed_file(hash, stream)
+
+    local max_entries = config.get_value_for("max_entries")
+    local gemfeed_hash = {}
+
+    gemfeed_hash.title          =  config.get_value_for("site_name")
+    gemfeed_hash.description    =  config.get_value_for("site_description")
+    -- gemfeed_hash.link           = "gemini://sawv.org/posts.gmi" 
+    -- gemfeed_hash.uri            =  "gemini://sawv.org/rss3.txt"
+    gemfeed_hash.lastmodified   =  os.date("%Y-%m-%dT%XZ")
+
+    local items = {}
+
+    if max_entries > #stream then
+        max_entries = #stream
+    end
+
+    for i=1, max_entries do
+        local h = {}
+        h.title   = stream[i].title
+        h.link    = stream[i].url
+        h.created = stream[i].created
+        table.insert(items, h)
+    end
+
+    gemfeed_hash.items = items
+
+    page.set_template_name("gemfeed")
+
+    page.set_template_variable("title",       gemfeed_hash.title) 
+    page.set_template_variable("description", gemfeed_hash.description)
+    -- page.set_template_variable("link",        gemfeed_hash.link)
+    -- page.set_template_variable("uri",         gemfeed_hash.uri)
+    page.set_template_variable("lastmodified",gemfeed_hash.lastmodified)
+    page.set_template_variable("items_loop",  gemfeed_hash.items)
+
+    local gemfeed_output = page.get_output_bare()
+
+    local gemfeed_feed_filename = config.get_value_for("default_doc_root") .. "/" .. config.get_value_for("gemfeed_feed_file")
+
+    local o = io.open(gemfeed_feed_filename, "w")
+    if o == nil then
+        return rj.report_error("500", "Unable to open Gemini feed file for write.", gemfeed_feed_filename)
+    else
+        o:write(gemfeed_output)
+        o:close()
+    end
+
+    return true
+
+end
+
 
 function _update_links_json_file(hash)
 
@@ -219,20 +271,10 @@ function _update_links_json_file(hash)
             author = hash.author 
         }
 
-        -- doing some hard-coding here to make things simple for now. 
-        -- maybe i'll set info as key-values in the yaml config file later.
-        -- i'm using a web-based cms to create and update content for gemini.
-        -- that means two different urls for the content.
-        -- i want to the links.json file to point to the gemini url. i use this
-        -- to create the atom feed for my gemini account.
-        -- but i need working web urls for hfeed html page.
-
         if hash.dir ~= nil then
                  tmp_hash.url = "gemini://sawv.org" .. "/" .. hash.dir .. "/" .. hash.slug .. ".gmi"
-            tmp_hash.hfeedurl = "http://gemini.soupmode.com" .. "/" .. hash.dir .. "/" .. hash.slug .. ".gmi"
         else
                  tmp_hash.url = "gemini://sawv.org" .. "/" .. hash.slug .. ".gmi"
-            tmp_hash.hfeedurl = "http://gemini.soupmode.com" .. "/" .. hash.slug .. ".gmi"
         end
 
         table.insert(stream, 1, tmp_hash)
@@ -312,12 +354,10 @@ function _save_markup_to_storage_directory(submit_type, markup, hash)
     local markup_filename = config.get_value_for("markup_storage") .. "/" .. domain_name .. "-" .. tmp_slug .. ".markup"
 
     if submit_type == "create" and io.open(markup_filename, "r") ~= nil then 
-        -- return rj.report_error("400", "Unable to create markup and HTML files because they already exist.", "Change title or do an 'update'.")
-        return false, {status = "400", user_message = "Unable to create markup and HTML files because they already exist.", system_message = "Change title or do an 'update'."}
+        return false, {status = "400", user_message = "Unable to create markup and GMI files because they already exist.", system_message = "Change title or do an 'update'."}
     else
         local o = io.open(markup_filename, "w")
         if o == nil then
-            -- return rj.report_error("500", "Save Markup to Storage Dir. Unable to open file for write.", "Post id: " .. hash.slug .. " filename: " .. markup_filename)
             return false, {status = "500", user_message = "Save Markup to Storage Dir: Unable to open file for write.", system_message = "Post id: " .. hash.slug .. " filename: " .. markup_filename}
         else
             o:write(save_markup .. "\n")
@@ -357,33 +397,6 @@ function M.output(submit_type, hash, markup)
     local error_status = true
     local error_messages = ""
 
---[[
-
-    if hash.template ~= nil then
-        page.set_template_name(hash.template)
-    elseif hash.post_type == "article" then
-        page.set_template_name("articlehtml")
-    else
-        page.set_template_name("notehtml")
-    end
-
-    page.set_template_variable("html", hash.html)
-    page.set_template_variable("title", hash.title)
-    page.set_template_variable("created_date", hash.created_date)
-    page.set_template_variable("created_time", hash.created_time)
-    page.set_template_variable("author", hash.author)
-    page.set_template_variable("permalink", hash.location)
-
-    if hash.custom_css ~= nil then
-        page.set_template_variable("using_custom_css", true)
-        page.set_template_variable("custom_css", hash.custom_css)
-    end
-
-    local html_output = page.get_output(hash.title)
-
-    page.reset()
-]]
-
     if submit_type == "update" then 
         hash.slug = hash.original_slug
     end
@@ -410,14 +423,11 @@ function M.output(submit_type, hash, markup)
         if error_status == false then
             return false, rj.report_error(stream.status, stream.user_message, stream.system_message)
         else
+            -- _create_rss3_file(hash, stream)
+            _create_atom_file(hash, stream)
+            _create_gemfeed_file(hash, stream)
             return true
         end
-
---        if _create_hfeed_file(stream) == false then
---            return false
---        end
-        -- _create_rss3_file(hash, stream)
-        -- _create_atom_file(hash, stream)
     end
 
     return true
