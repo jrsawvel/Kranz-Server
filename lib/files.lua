@@ -27,20 +27,25 @@ function _save_markup_to_backup_directory(markup, hash)
     end
 
     local previous_markup_version = M.read_markup_file(tmp_post_id)
-    local epoch_secs = os.time()
 
-    local markup_filename = config.get_value_for("versions_storage") .. "/" .. tmp_slug .. "-" .. epoch_secs .. "-version.gmi"
-
-    local f = io.open(markup_filename, "w")
-    if f == nil then
-        -- return rj.report_error("500", "Unable to open backup file for write.", markup_filename)
-        return false, {status = "500", user_message = "Unable to open backup file for write.", system_message = markup_filename}
+    if previous_markup_version == "-999" then
+        return false, {status = "400", user_message = "Could not open " .. tmp_post_id .. ".gmi for read.", system_message = "File not found."}
     else
-        f:write(previous_markup_version)
-        f:close()
-    end
+        local epoch_secs = os.time()
 
-    return true
+        local markup_filename = config.get_value_for("versions_storage") .. "/" .. tmp_slug .. "-" .. epoch_secs .. "-version.gmi"
+
+        local f = io.open(markup_filename, "w")
+        if f == nil then
+            -- return rj.report_error("500", "Unable to open backup file for write.", markup_filename)
+            return false, {status = "500", user_message = "Unable to open backup file for write.", system_message = markup_filename}
+        else
+            f:write(previous_markup_version)
+            f:close()
+        end
+
+        return true
+    end
 end
 
 

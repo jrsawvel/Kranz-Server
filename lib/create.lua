@@ -55,6 +55,12 @@ function M.create_post(hash)
                    end 
 
                    local tmp_dir = rex.match(markup, "^<!--[ ]*dir[ ]*:[ ]*(.+)[ ]*-->", 1, "im")
+                   local tmp_dir_2 = rex.match(markup, "^```[ ]*dir[ ]*:[ ]*(.+)[ ]*", 1, "im")
+
+                   if tmp_dir_2 ~= nil then
+                       tmp_dir = tmp_dir_2
+                   end
+
                    if tmp_dir ~= nil then
                        post_hash.dir = utils.trim_spaces(tmp_dir)
                        -- remove ending forward slash if it exists
